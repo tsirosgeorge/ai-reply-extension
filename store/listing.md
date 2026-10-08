@@ -3,24 +3,25 @@
 **Name:** AI Comment Helper – DeepSeek
 
 **Summary (max 132 chars):**
-Write better comments on Facebook, X, LinkedIn & more. Improve, translate (EL/EN) or draft replies with your DeepSeek API key.
+Γράψε καλύτερα σχόλια: βελτίωση κειμένου, μετάφραση Ελληνικά/English και προτάσεις απάντησης με AI.
 
 **Category:** Productivity → Communication / Tools
 
 **Language:** Greek, English
 
 **Description:**
-AI Comment Helper adds a small button next to the comment box on Facebook, X (Twitter), LinkedIn, Instagram, Reddit, YouTube and Threads.
+Γράψε καλύτερα σχόλια, πιο γρήγορα.
 
-• Write reply: reads the post you're on and drafts a relevant reply
-• Improve: fixes grammar, spelling and accents and makes your text clearer, in the same language
-• Greek ⇄ English: rewrites your draft naturally in the other language
-• Choose a tone (friendly, professional, supportive, funny, very short) and add your own instructions
-• Preview every suggestion before inserting it. Nothing is ever posted automatically.
+Το AI Comment Helper προσθέτει ένα μικρό κουμπί δίπλα στο πλαίσιο σχολίου στα social media. Με ένα κλικ:
 
-Bring your own DeepSeek API key: you pay DeepSeek directly, at very low cost. No accounts, no subscriptions, no tracking. Your key and settings stay in your browser.
+• Γράψε απάντηση: διαβάζει την ανάρτηση που βλέπεις και προτείνει μια σχετική απάντηση
+• Βελτίωσε: διορθώνει ορθογραφία, τόνους και ροή, κρατώντας το νόημα και τη γλώσσα σου
+• Ελληνικά ⇄ English: ξαναγράφει το κείμενό σου φυσικά στην άλλη γλώσσα
+• Διάλεξε ύφος (φιλικό, επαγγελματικό, υποστηρικτικό, χιουμοριστικό, σύντομο) και πρόσθεσε δικές σου οδηγίες
 
-Γράψε καλύτερα σχόλια στα social media: βελτίωση κειμένου, μετάφραση Ελληνικά/Αγγλικά και αυτόματη απάντηση με βάση το post.
+Βλέπεις πάντα την πρόταση πριν μπει στο σχόλιο. Τίποτα δεν δημοσιεύεται αυτόματα.
+
+Λειτουργεί με το δικό σου DeepSeek API key: χωρίς λογαριασμό, χωρίς συνδρομή, χωρίς tracking. Το key και οι ρυθμίσεις σου μένουν μόνο στον browser σου.
 
 ## Privacy tab answers
 - **Single purpose:** Help the user write, improve and translate social media comments with AI.
