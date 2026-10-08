@@ -72,12 +72,41 @@
   }
 
   // ---------- reading the post ----------
+  const GENERIC_ALT = /^(image|photo|picture|εικόνα|φωτογραφία|no alt text|)$/i;
+
+  // Describes images/videos for the model: alt text where available, otherwise a
+  // marker so it knows there is media it cannot see.
+  function mediaNotes(node, imgSel = "img", minSize = 120) {
+    const notes = [];
+    const seen = new Set();
+    for (const img of node.querySelectorAll(imgSel)) {
+      // skip avatars, emoji and icons
+      if (Math.max(img.width, img.naturalWidth || 0) < minSize) continue;
+      const alt = (img.getAttribute("alt") || "").trim();
+      const key = alt || img.currentSrc || img.src;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      notes.push(GENERIC_ALT.test(alt) ? "[Image: no description available]" : `[Image: ${alt}]`);
+      if (notes.length >= 4) break;
+    }
+    if (node.querySelector("video")) notes.push("[Video]");
+    return notes.join("\n");
+  }
+
   function tweetText(article) {
     if (!article) return "";
     const name = article.querySelector('[data-testid="User-Name"]');
-    const body = article.querySelector('[data-testid="tweetText"]');
     const author = name ? name.innerText.split("\n").slice(0, 2).join(" ") : "";
-    return (author ? author + ":\n" : "") + (body ? body.innerText : article.innerText);
+    // the first tweetText is the tweet itself, a second one belongs to a quoted tweet
+    const bodies = article.querySelectorAll('[data-testid="tweetText"]');
+    const parts = [bodies[0] ? bodies[0].innerText : bodies.length ? "" : article.innerText];
+    if (bodies[1]) parts.push(`[Quoted post: ${bodies[1].innerText}]`);
+    const card = article.querySelector('[data-testid="card.wrapper"]');
+    if (card) parts.push(`[Link: ${card.innerText.replace(/\n+/g, " · ")}]`);
+    // these selectors only match post media, so no size filter (images may still be lazy-loading)
+    const media = mediaNotes(article, '[data-testid="tweetPhoto"] img, [data-testid="card.wrapper"] img', 0);
+    if (media) parts.push(media);
+    return (author ? author + ":\n" : "") + parts.filter(Boolean).join("\n");
   }
 
   function readContextX(el) {
@@ -117,8 +146,10 @@
     }
     let post = "", replyTo = "";
     const strip = (node) => {
-      const t = node.innerText || "";
-      return draft ? t.replace(draft, "") : t;
+      let t = node.innerText || "";
+      if (draft) t = t.replace(draft, "");
+      const media = mediaNotes(node);
+      return media ? t + "\n" + media : t;
     };
     if (articles.length) {
       post = strip(articles[articles.length - 1]);

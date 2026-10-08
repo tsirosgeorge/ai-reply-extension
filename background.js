@@ -43,6 +43,9 @@ function buildMessages({ action, draft, post, replyTo, instructions, tone, perso
     "You write in Greek or English. Output ONLY the final comment text: no quotes, no explanations, no preamble, no hashtags unless asked. " +
     "Sound human and natural, never robotic or overly formal. Do not use emojis excessively (at most one, and only if it fits). " +
     `Tone: ${toneTxt}.` +
+    " Images and videos in the post appear as [Image: ...] / [Video] markers. When a description is given, you may refer to it. " +
+    "When it says 'no description available', you cannot see that media: never invent or guess what it shows; " +
+    "react to the text and the general topic instead (e.g. praise or ask about it in general terms)." +
     (maxChars ? ` Hard limit: the comment must be under ${maxChars} characters.` : "") +
     (persona ? `\nAbout the user who is writing (use only if relevant): ${persona}` : "");
 

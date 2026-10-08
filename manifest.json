@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI Comment Helper (DeepSeek)",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "AI βοηθός για σχόλια: βελτίωση κειμένου, μετάφραση ΕΛ/EN και αυτόματη απάντηση με βάση το post.",
   "icons": {
     "16": "icons/icon16.png",
