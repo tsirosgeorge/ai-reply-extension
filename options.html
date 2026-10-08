@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>AI Comment Helper – Ρυθμίσεις</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 16px; color: #e6e6e6; background: #141415; }
+  h1 { font-size: 19px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  h1 img { width: 28px; height: 28px; }
+  label { display: block; font-weight: 600; margin: 18px 0 6px; font-size: 13.5px; }
+  small { display: block; color: #8a8a8e; margin-top: 4px; font-size: 12px; }
+  input, textarea, select { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #333336; border-radius: 6px; font-size: 14px; background: #1e1e20; color: #e6e6e6; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: #6b6b70; }
+  .chk { display: flex; gap: 8px; align-items: center; font-weight: 400; }
+  .chk input { width: auto; }
+  button { margin-top: 22px; padding: 9px 18px; border: none; border-radius: 6px; background: #e6e6e6; color: #141415; font-weight: 600; cursor: pointer; font-size: 14px; }
+  button:hover { background: #fff; }
+  #msg { margin-left: 10px; font-size: 13px; }
+  a { color: #e6e6e6; }
+</style>
+</head>
+<body>
+  <h1><img src="icons/icon48.png" alt="">AI Comment Helper</h1>
+
+  <label for="apiKey">DeepSeek API key</label>
+  <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
+  <small>Το παίρνεις από <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a>. Αποθηκεύεται μόνο τοπικά στον browser σου.</small>
+
+  <label for="model">Μοντέλο</label>
+  <select id="model">
+    <option value="deepseek-chat">deepseek-chat (γρήγορο – προτείνεται)</option>
+    <option value="deepseek-reasoner">deepseek-reasoner (πιο αργό, «σκέφτεται»)</option>
+  </select>
+
+  <label for="persona">Λίγα λόγια για σένα (προαιρετικό)</label>
+  <textarea id="persona" rows="3" placeholder="π.χ. Developer, γράφω χαλαρά, σε πρώτο πρόσωπο."></textarea>
+  <small>Το AI το χρησιμοποιεί για να γράφει πιο «σαν εσένα».</small>
+
+  <label for="sites">Sites όπου εμφανίζεται το εικονίδιο</label>
+  <textarea id="sites" rows="6"></textarea>
+  <small>Ένα domain ανά γραμμή. Μπορείς να αφαιρέσεις sites όπου δεν το θες.</small>
+
+  <button id="save">Αποθήκευση</button><span id="msg"></span>
+  <small style="margin-top:14px">Μετά την αποθήκευση κάνε refresh στις ανοιχτές σελίδες.</small>
+
+  <script src="options.js"></script>
+</body>
+</html>
