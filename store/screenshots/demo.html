@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>Store screenshot demo</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    width: 1280px; height: 800px; overflow: hidden;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f0f1f3; color: #1c1e21; display: flex;
+  }
+  .side {
+    width: 440px; background: #141415; color: #e6e6e6; padding: 72px 48px;
+    display: flex; flex-direction: column;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 17px; margin-bottom: 64px; }
+  .brand img { width: 36px; height: 36px; }
+  h1 { font-size: 38px; line-height: 1.15; margin: 0 0 22px; font-weight: 700; letter-spacing: -.5px; }
+  .sub { font-size: 17px; line-height: 1.5; color: #a8a8ad; margin: 0 0 36px; }
+  ul { list-style: none; padding: 0; margin: 0; font-size: 15.5px; line-height: 1.5; }
+  li { padding: 9px 0; border-top: 1px solid #2a2a2d; color: #d4d4d8; }
+  li b { color: #fff; font-weight: 600; }
+  .foot { margin-top: auto; font-size: 13px; color: #6f6f75; }
+
+  .stage { flex: 1; padding: 56px 64px; position: relative; }
+  .post { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.08); width: 620px; overflow: hidden; }
+  .ph { display: flex; gap: 12px; align-items: center; padding: 16px 18px 8px; }
+  .av { width: 42px; height: 42px; border-radius: 50%; background: #c9ccd3; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #4b4f58; }
+  .nm { font-weight: 600; font-size: 15px; }
+  .tm { font-size: 12.5px; color: #65676b; }
+  .tx { padding: 6px 18px 14px; font-size: 15px; line-height: 1.5; white-space: pre-line; }
+  .img { height: 170px; background: linear-gradient(135deg, #d9dce2, #c3c7cf); }
+  .stats { display: flex; justify-content: space-between; padding: 10px 18px; font-size: 13px; color: #65676b; border-bottom: 1px solid #e4e6eb; }
+  .cm { display: flex; gap: 10px; padding: 14px 18px 18px; align-items: flex-start; }
+  .cm .av { width: 34px; height: 34px; font-size: 13px; flex: none; }
+  .box {
+    flex: 1; min-height: 38px; background: #f0f2f5; border-radius: 18px; padding: 9px 14px;
+    font-size: 14.5px; line-height: 1.4; outline: none; margin-right: 40px;
+  }
+  .box:empty::before { content: attr(data-ph); color: #8a8d91; }
+</style>
+</head>
+<body>
+  <aside class="side">
+    <div class="brand"><img src="../../icons/icon128.png" alt="">AI Comment Helper</div>
+    <h1 id="h"></h1>
+    <p class="sub" id="s"></p>
+    <ul>
+      <li><b>Γράψε απάντηση</b> με βάση το post</li>
+      <li><b>Βελτίωσε</b> ορθογραφία, τόνους και ροή</li>
+      <li><b>Ελληνικά ⇄ English</b> με ένα κλικ</li>
+      <li>Ύφος και δικές σου οδηγίες</li>
+    </ul>
+    <div class="foot">Με το δικό σου DeepSeek API key · Χωρίς tracking</div>
+  </aside>
+
+  <main class="stage">
+    <article class="post" role="article">
+      <div class="ph"><div class="av">ΜΚ</div><div><div class="nm">Μαρία Κωνσταντίνου</div><div class="tm">2 ώρες</div></div></div>
+      <div class="tx" id="post"></div>
+      <div class="img"></div>
+      <div class="stats"><span>128 αντιδράσεις</span><span>24 σχόλια</span></div>
+      <div class="cm">
+        <div class="av">ΓΤ</div>
+        <div class="box" id="editor" contenteditable="true" data-ph="Γράψε ένα σχόλιο…"></div>
+      </div>
+    </article>
+  </main>
+
+<script>
+  const SCENES = {
+    reply: {
+      h: "Γράψε καλύτερα σχόλια, πιο γρήγορα",
+      s: "Ένα κλικ δίπλα στο πλαίσιο σχολίου και το AI διαβάζει το post και σου προτείνει απάντηση.",
+      post: "Μετά από 2 χρόνια δουλειάς ανοίξαμε σήμερα το δικό μας μικρό καφέ στη Θεσσαλονίκη! ☕\nΣας ευχαριστούμε όλους για τη στήριξη. Σας περιμένουμε να τα πούμε από κοντά!",
+      draft: "",
+      act: "reply",
+      tone: "friendly",
+      instr: "",
+      out: "Μεγάλη επιτυχία Μαρία, πολλά συγχαρητήρια! Δύο χρόνια προσπάθειας φαίνεται πως άξιζαν. Την επόμενη φορά που θα είμαι Θεσσαλονίκη, ο καφές είναι σίγουρα στο μαγαζί σας!"
+    },
+    improve: {
+      h: "Το κείμενό σου, πιο καθαρό",
+      s: "Γράψε όπως σου έρθει. Το AI διορθώνει ορθογραφία, τόνους και ροή, κρατώντας το νόημα.",
+      post: "Μετά από 2 χρόνια δουλειάς ανοίξαμε σήμερα το δικό μας μικρό καφέ στη Θεσσαλονίκη! ☕\nΣας ευχαριστούμε όλους για τη στήριξη. Σας περιμένουμε να τα πούμε από κοντά!",
+      draft: "τελειο!! καλη αρχη και καλες δουλιες, θα ερθω σιγουρα να δοκιμασω καφε",
+      act: "improve",
+      tone: "friendly",
+      instr: "",
+      out: "Τέλειο! Καλή αρχή και καλές δουλειές! Θα έρθω σίγουρα να δοκιμάσω τον καφέ σας."
+    },
+    english: {
+      h: "Ελληνικά ⇄ English",
+      s: "Γράψε στα ελληνικά και πάρε φυσικό, σωστό αγγλικό κείμενο, ή το αντίστροφο.",
+      post: "We just shipped v2.0 of our open-source design toolkit 🎉\nNew components, dark mode and a much faster build. Feedback welcome!",
+      draft: "πολυ ωραια δουλεια, το dark mode ηταν κατι που περιμενα καιρο. θα το δοκιμασω στο επομενο project",
+      act: "to_en",
+      tone: "professional",
+      instr: "",
+      out: "Great work on this release! Dark mode is something I've been waiting for. I'll definitely try it out on my next project."
+    }
+  };
+  const scene = SCENES[new URLSearchParams(location.search).get("scene") || "reply"];
+  document.getElementById("h").textContent = scene.h;
+  document.getElementById("s").textContent = scene.s;
+  document.getElementById("post").textContent = scene.post;
+  document.getElementById("editor").textContent = scene.draft;
+
+  // Minimal stand-in for the extension APIs so content.js runs on this page
+  window.chrome = {
+    storage: { local: {
+      get(_k, cb) { const v = { sites: location.hostname, lastTone: scene.tone }; return cb ? cb(v) : Promise.resolve(v); },
+      set() { return Promise.resolve(); }
+    } },
+    runtime: { sendMessage: async () => ({ ok: true, text: scene.out }) }
+  };
+</script>
+<script src="../../content.js"></script>
+<script>
+  const ed = document.getElementById("editor");
+  ed.focus();
+  setTimeout(() => {
+    const r = document.getElementById("ai-comment-helper-host").shadowRoot;
+    r.querySelector(".btn").click();
+    r.querySelector(".tone").value = scene.tone;
+    r.querySelector(".instr").value = scene.instr;
+    r.querySelector(`[data-act="${scene.act}"]`).click();
+  }, 300);
+</script>
+</body>
+</html>
