@@ -1,4 +1,4 @@
-const FIELDS = ["apiKey", "model", "persona", "sites"];
+const FIELDS = ["apiKey", "model", "replyLang", "persona", "sites"];
 const $ = (id) => document.getElementById(id);
 
 chrome.storage.local.get(FIELDS, (cfg) => {

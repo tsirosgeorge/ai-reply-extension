@@ -2,6 +2,7 @@ const DEFAULTS = {
   apiKey: "",
   model: "deepseek-chat",
   persona: "",
+  replyLang: "en",
   sites: "facebook.com\nlinkedin.com\nx.com\ntwitter.com\ninstagram.com\nreddit.com\nyoutube.com\nthreads.net\nthreads.com"
 };
 
@@ -36,7 +37,13 @@ const TONES = {
   supportive: "υποστηρικτικό, ζεστό / supportive and warm"
 };
 
-function buildMessages({ action, draft, post, replyTo, instructions, tone, persona, maxChars }) {
+const REPLY_LANG = {
+  en: "Write it in ENGLISH, even if the post is in another language",
+  el: "Write it in GREEK (Ελληνικά), even if the post is in another language",
+  auto: "Write it in the same language as the post"
+};
+
+function buildMessages({ action, draft, post, replyTo, instructions, tone, persona, maxChars, replyLang }) {
   const toneTxt = TONES[tone] || TONES.friendly;
   const system =
     "You are a writing assistant for social media comments. " +
@@ -71,7 +78,7 @@ function buildMessages({ action, draft, post, replyTo, instructions, tone, perso
     default:
       task =
         "Write a comment replying to the post below" + (replyTo ? " (specifically replying to the quoted comment)" : "") + ". " +
-        "Write it in the same language as the post unless instructed otherwise. Be relevant and specific to the content." +
+        `${REPLY_LANG[replyLang] || REPLY_LANG.en}, unless the user instructions say otherwise. Be relevant and specific to the content.` +
         (draft ? `\n\nThe user already started writing this; use it as the basis/idea:\n${draft}` : "");
   }
   if (instructions) task += `\n\n--- USER INSTRUCTIONS (follow these) ---\n${instructions}`;
@@ -85,7 +92,7 @@ function buildMessages({ action, draft, post, replyTo, instructions, tone, perso
 }
 
 async function runAI(msg) {
-  const cfg = await chrome.storage.local.get(["apiKey", "model", "persona"]);
+  const cfg = await chrome.storage.local.get(["apiKey", "model", "persona", "replyLang"]);
   if (!cfg.apiKey) throw new Error("Δεν έχεις βάλει DeepSeek API key (Ρυθμίσεις).");
 
   const res = await fetch("https://api.deepseek.com/chat/completions", {
@@ -93,7 +100,7 @@ async function runAI(msg) {
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${cfg.apiKey}` },
     body: JSON.stringify({
       model: cfg.model || "deepseek-chat",
-      messages: buildMessages({ ...msg, persona: cfg.persona }),
+      messages: buildMessages({ ...msg, persona: cfg.persona, replyLang: cfg.replyLang }),
       temperature: msg.action === "reply" ? 0.9 : 0.4,
       max_tokens: 800
     })
